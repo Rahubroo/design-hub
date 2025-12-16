@@ -4,96 +4,58 @@
 
 /* Shivani Enterprises Design System
    Brand Colors: Blue, Teal, Green (from logo)
-   Theme: Light professional with gradient accents
+   Theme: Dark with gradient accents
 */
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 210 40% 15%;
+    /* Dark theme as default */
+    --background: 210 40% 6%;
+    --foreground: 210 20% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 40% 15%;
+    --card: 210 40% 10%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 15%;
+    --popover: 210 40% 10%;
+    --popover-foreground: 210 20% 95%;
 
     /* Primary: Professional Blue */
-    --primary: 210 70% 45%;
+    --primary: 210 70% 55%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary: Teal */
-    --secondary: 175 60% 45%;
+    --secondary: 175 60% 50%;
     --secondary-foreground: 0 0% 100%;
 
     /* Accent: Green */
-    --accent: 150 50% 45%;
+    --accent: 150 50% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --muted: 210 20% 95%;
-    --muted-foreground: 210 20% 40%;
+    --muted: 210 30% 15%;
+    --muted-foreground: 210 20% 65%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 88%;
-    --input: 210 20% 88%;
-    --ring: 210 70% 45%;
+    --border: 210 30% 18%;
+    --input: 210 30% 18%;
+    --ring: 210 70% 55%;
 
     --radius: 0.75rem;
 
     /* Custom brand gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210, 70%, 45%), hsl(175, 60%, 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(175, 60%, 45%), hsl(150, 50%, 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(150, 50%, 45%), hsl(210, 70%, 45%));
-    --gradient-card-blue: linear-gradient(145deg, hsl(210, 70%, 97%), hsl(210, 70%, 92%));
-    --gradient-card-teal: linear-gradient(145deg, hsl(175, 60%, 97%), hsl(175, 60%, 92%));
-    --gradient-card-green: linear-gradient(145deg, hsl(150, 50%, 97%), hsl(150, 50%, 92%));
+    --gradient-primary: linear-gradient(135deg, hsl(210, 70%, 55%), hsl(175, 60%, 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(175, 60%, 50%), hsl(150, 50%, 50%));
+    --gradient-accent: linear-gradient(135deg, hsl(150, 50%, 50%), hsl(210, 70%, 55%));
+    --gradient-card-blue: linear-gradient(145deg, hsl(210, 40%, 12%), hsl(210, 50%, 15%));
+    --gradient-card-teal: linear-gradient(145deg, hsl(175, 30%, 12%), hsl(175, 40%, 15%));
+    --gradient-card-green: linear-gradient(145deg, hsl(150, 30%, 12%), hsl(150, 40%, 15%));
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 210 20% 30%;
-    --sidebar-primary: 210 70% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 175 60% 95%;
-    --sidebar-accent-foreground: 210 40% 15%;
-    --sidebar-border: 210 20% 90%;
-    --sidebar-ring: 210 70% 45%;
-  }
-
-  .dark {
-    --background: 210 40% 8%;
-    --foreground: 210 20% 95%;
-
-    --card: 210 40% 12%;
-    --card-foreground: 210 20% 95%;
-
-    --popover: 210 40% 12%;
-    --popover-foreground: 210 20% 95%;
-
-    --primary: 210 70% 55%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 175 60% 50%;
-    --secondary-foreground: 0 0% 100%;
-
-    --accent: 150 50% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    --muted: 210 30% 18%;
-    --muted-foreground: 210 20% 65%;
-
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 210 30% 20%;
-    --input: 210 30% 20%;
-    --ring: 210 70% 55%;
-
-    --sidebar-background: 210 40% 10%;
+    --sidebar-background: 210 40% 8%;
     --sidebar-foreground: 210 20% 90%;
     --sidebar-primary: 210 70% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 30% 18%;
+    --sidebar-accent: 210 30% 15%;
     --sidebar-accent-foreground: 210 20% 90%;
     --sidebar-border: 210 30% 18%;
     --sidebar-ring: 210 70% 55%;
@@ -140,7 +102,9 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent;
     background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
