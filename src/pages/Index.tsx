@@ -43,16 +43,16 @@ export default function Index() {
             muted
             loop
             playsInline
+            preload="auto"
             className="h-full w-full object-cover"
             poster="/placeholder.svg"
           >
-            {/* Add your video source here */}
             <source src="/hero-video.mp4" type="video/mp4" />
           </video>
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
+          {/* Overlay for readability (keep video visible) */}
+          <div className="pointer-events-none absolute inset-0 bg-background/55" />
+          {/* Soft vignette */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-background/30 to-background" />
         </div>
         
         <div className="container relative z-10">
