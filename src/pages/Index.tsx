@@ -34,10 +34,28 @@ const featuredProjects = [
 export default function Index() {
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
-        <div className="absolute inset-0 gradient-primary opacity-5" />
-        <div className="container relative">
+      {/* Hero Section with Video Background */}
+      <section className="relative overflow-hidden min-h-[80vh] flex items-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="h-full w-full object-cover"
+            poster="/placeholder.svg"
+          >
+            {/* Add your video source here */}
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
+        </div>
+        
+        <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl animate-fade-in">
               Building Tomorrow's{" "}
@@ -48,10 +66,10 @@ export default function Index() {
               commercial, and residential projects across India.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              <Button asChild size="lg" className="gradient-primary border-0">
+              <Button asChild size="lg" className="gradient-primary border-0 text-primary-foreground">
                 <Link to="/contact">Get A Quote</Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild variant="outline" size="lg" className="border-primary/50 text-foreground hover:bg-primary/10">
                 <Link to="/projects">
                   View Our Projects
                   <ArrowRight className="ml-2 h-4 w-4" />
