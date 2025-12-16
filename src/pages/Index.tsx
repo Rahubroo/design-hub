@@ -49,10 +49,10 @@ export default function Index() {
           >
             <source src="/hero-video.mp4" type="video/mp4" />
           </video>
-          {/* Overlay for readability (keep video visible) */}
-          <div className="pointer-events-none absolute inset-0 bg-background/55" />
-          {/* Soft vignette */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-background/30 to-background" />
+          {/* Lighter overlay for more visible video */}
+          <div className="pointer-events-none absolute inset-0 bg-background/30" />
+          {/* Soft gradient at bottom only */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
         </div>
         
         <div className="container relative z-10">
