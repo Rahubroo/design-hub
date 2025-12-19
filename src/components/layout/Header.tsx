@@ -34,11 +34,10 @@ export function Header() {
             <Link
               key={link.path}
               to={link.path}
-              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md hover:bg-muted ${
-                location.pathname === link.path
+              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md hover:bg-muted ${location.pathname === link.path
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
               {link.name}
             </Link>
@@ -71,11 +70,10 @@ export function Header() {
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className={`px-4 py-3 text-sm font-medium transition-colors rounded-md ${
-                  location.pathname === link.path
+                className={`px-4 py-3 text-sm font-medium transition-colors rounded-md ${location.pathname === link.path
                     ? "text-primary bg-muted"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+                  }`}
               >
                 {link.name}
               </Link>

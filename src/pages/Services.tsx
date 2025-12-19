@@ -1,191 +1,169 @@
-import { Factory, Building2, Warehouse, ShoppingBag, Paintbrush, Wrench, ChevronDown } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { CheckCircle2 } from "lucide-react";
 
-const serviceCards = [
+const services = [
   {
-    icon: Factory,
+    id: "industrial",
     title: "Industrial Projects",
-    description: "Factory installations, motor controls, PLC systems",
-    gradient: "gradient-card-blue",
+    summary: "We deliver robust and efficient industrial environments designed to support long-term operations. Our approach emphasizes structural excellence, functional planning, and adherence to stringent industrial standards.",
+    includes: [
+      "Industrial and factory building construction",
+      "RCC and structural framework",
+      "Utility buildings and service areas",
+      "Heavy-duty industrial flooring",
+      "Integrated electrical and infrastructure works",
+    ],
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop",
   },
   {
-    icon: Building2,
+    id: "commercial",
     title: "Commercial Projects",
-    description: "Office wiring, retail lighting, power backup",
-    gradient: "gradient-card-teal",
+    summary: "We create refined commercial and corporate spaces that reflect professionalism, efficiency, and modern design. Each project is executed with meticulous attention to detail and operational continuity.",
+    includes: [
+      "Corporate and office building construction",
+      "Commercial renovations and upgrades",
+      "Turnkey interior fit-outs",
+      "Electrical, lighting, and service systems",
+      "Civil, finishing, and detailing works",
+    ],
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop",
   },
   {
-    icon: Warehouse,
+    id: "warehouse",
     title: "Warehouse Solutions",
-    description: "Lighting systems, material handling, loading bays",
-    gradient: "gradient-card-green",
+    summary: "We design and execute high-performance warehouse facilities that balance functionality, scalability, and durability, tailored to logistics and industrial requirements.",
+    includes: [
+      "Warehouse and logistics facility construction",
+      "Internal circulation roads and pavements",
+      "Loading bays and service docks",
+      "High-efficiency lighting systems",
+      "Complete infrastructure and electrical works",
+    ],
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop",
   },
   {
-    icon: ShoppingBag,
-    title: "Mall & Complex Services",
-    description: "Escalators, decorative lighting, monitoring",
-    gradient: "gradient-card-blue",
+    id: "residential",
+    title: "Residential Projects",
+    summary: "We craft elegant and enduring residential spaces that prioritize comfort, planning, and quality execution, delivering homes that stand the test of time.",
+    includes: [
+      "Independent residences and builder floors",
+      "Farmhouse construction and development",
+      "Structural and renovation works",
+      "Premium civil and finishing services",
+      "Electrical and plumbing coordination",
+    ],
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
   },
   {
-    icon: Paintbrush,
+    id: "interior",
     title: "Interior Services",
-    description: "Space planning, false ceiling, designer lighting",
-    gradient: "gradient-card-teal",
+    summary: "Our interior services blend aesthetics with precision engineering, creating sophisticated spaces that are both functional and visually refined.",
+    includes: [
+      "Detailed space planning and layouts",
+      "False ceiling and lighting design",
+      "Premium flooring and wall finishes",
+      "Custom wooden furniture and paneling",
+      "Integrated electrical and lighting systems",
+    ],
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
   },
   {
-    icon: Wrench,
+    id: "maintenance",
     title: "Maintenance & Support",
-    description: "24/7 support, preventive maintenance, repairs",
-    gradient: "gradient-card-green",
-  },
-];
-
-const detailedServices = [
-  {
-    title: "Industrial Projects",
-    items: [
-      "HT/LT panel installation and commissioning",
-      "Motor control centers (MCC) design and setup",
-      "PLC/SCADA automation systems",
-      "Power factor correction systems",
-      "Industrial lighting solutions",
-      "Cable tray and conduit installation",
-      "Earthing and lightning protection",
+    summary: "We provide discreet and dependable maintenance services to preserve the quality, safety, and performance of completed projects over time.",
+    includes: [
+      "Preventive and scheduled maintenance",
+      "Civil and interior repair works",
+      "Electrical system maintenance",
+      "Renovation and upgrade solutions",
+      "Dedicated support services",
     ],
-  },
-  {
-    title: "Commercial Projects",
-    items: [
-      "Complete office electrical fit-out",
-      "Retail store lighting design",
-      "UPS and power backup systems",
-      "Structured cabling (data/voice)",
-      "Access control and security systems",
-      "Emergency lighting and fire alarms",
-      "Energy-efficient LED retrofits",
-    ],
-  },
-  {
-    title: "Warehouse Solutions",
-    items: [
-      "High-bay industrial lighting",
-      "Material handling equipment wiring",
-      "Loading dock electrical systems",
-      "Warehouse automation wiring",
-      "Temperature control systems",
-      "Safety interlocks and sensors",
-      "Power distribution for racking systems",
-    ],
-  },
-  {
-    title: "Mall & Complex Services",
-    items: [
-      "Escalator and elevator electrical systems",
-      "Decorative and facade lighting",
-      "Parking management systems",
-      "Central monitoring and BMS integration",
-      "Food court electrical infrastructure",
-      "Anchor store electrical fit-outs",
-      "Common area power management",
-    ],
-  },
-  {
-    title: "Interior Services",
-    items: [
-      "Space planning and electrical layout",
-      "False ceiling with integrated lighting",
-      "Designer lighting fixtures installation",
-      "Concealed wiring and conduits",
-      "Smart home and automation systems",
-      "Audio-visual system wiring",
-      "Modular furniture power points",
-    ],
-  },
-  {
-    title: "Maintenance & Support",
-    items: [
-      "24/7 emergency support",
-      "Preventive maintenance contracts",
-      "Electrical safety audits",
-      "Thermal imaging surveys",
-      "Power quality analysis",
-      "Equipment repair and replacement",
-      "AMC for electrical systems",
-    ],
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1169&auto=format&fit=crop",
   },
 ];
 
 export default function Services() {
   return (
     <Layout>
-      <div className="py-12">
+      <div className="py-20 animate-fade-in">
         <div className="container">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="font-display text-4xl font-bold text-foreground">
+          <div className="text-center mb-20 max-w-4xl mx-auto">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
               Our Services
             </h1>
-            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive electrical and infrastructure solutions tailored to meet 
-              your specific requirements across all sectors.
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              At Shivani Enterprises, we deliver thoughtfully engineered construction and
+              interior solutions that combine craftsmanship, precision, and enduring quality.
+              Our services span residential, commercial, and industrial sectors, offering
+              seamless execution from concept to completion.
             </p>
           </div>
 
-          {/* Service Cards */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16">
-            {serviceCards.map((service, index) => (
-              <Card
-                key={index}
-                className={`${service.gradient} border-border/30 hover:shadow-lg transition-all duration-300`}
+          {/* Services List */}
+          <div className="space-y-24">
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                className={`flex flex-col lg:flex-row gap-12 lg:gap-20 items-center ${index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                  }`}
               >
-                <CardHeader className="pb-2">
-                  <service.icon className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle className="font-display text-xl text-foreground">
-                    {service.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm">
-                    {service.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                {/* Content Side */}
+                <div className="flex-1 space-y-8 w-full">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6">
+                    <span className="font-mono text-5xl md:text-6xl font-bold text-primary/20 select-none leading-none">
+                      0{index + 1}
+                    </span>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                      {service.title}
+                    </h2>
+                  </div>
 
-          {/* Detailed Services */}
-          <div className="max-w-4xl mx-auto">
-            <h2 className="font-display text-2xl font-bold text-foreground text-center mb-8">
-              Detailed Service Information
-            </h2>
-            <Accordion type="single" collapsible className="space-y-4">
-              {detailedServices.map((service, index) => (
-                <AccordionItem
-                  key={index}
-                  value={`service-${index}`}
-                  className="border border-border/50 rounded-lg px-6 bg-card"
-                >
-                  <AccordionTrigger className="text-left font-display font-semibold hover:no-underline">
-                    {service.title}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="space-y-2 pb-2">
-                      {service.items.map((item, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start gap-3 text-muted-foreground"
-                        >
-                          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                          {item}
+                  {/* Summary Box */}
+                  <div className="bg-muted/30 border-l-4 border-primary p-6 rounded-r-xl">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
+                      Summary
+                    </h3>
+                    <p className="text-foreground/90 leading-relaxed text-lg">
+                      {service.summary}
+                    </p>
+                  </div>
+
+                  {/* Includes List */}
+                  <div>
+                    <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                      Includes
+                    </h3>
+                    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                      {service.includes.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">{item}</span>
                         </li>
                       ))}
                     </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                  </div>
+                </div>
+
+                {/* Image Side */}
+                <div className="flex-1 w-full">
+                  <div className="relative group">
+                    <div className="overflow-hidden rounded-xl shadow-lg border border-border/50 bg-muted aspect-[4/3]">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+                        <span className="text-white font-display font-bold text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                          {service.title}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

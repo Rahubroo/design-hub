@@ -1,190 +1,145 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Building2, Home, Hammer, Zap, Wrench, X, MapPin, IndianRupee, Ruler, Clock } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 import { Layout } from "@/components/layout/Layout";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ProjectCard } from "@/components/ProjectCard";
+
+import { Project, projects } from "@/data/projects";
 
 const categories = [
-  "Commercial",
-  "Residential",
-  "Renovation",
-  "Electrical",
-  "Mechanical",
+  { name: "Commercial", icon: Building2 },
+  { name: "Residential", icon: Home },
+  { name: "Renovation", icon: Hammer },
+  { name: "Electrical", icon: Zap },
+  { name: "Mechanical", icon: Wrench },
 ];
-
-const projects = [
-  {
-    id: 1,
-    title: "UFlex Industrial Plant",
-    category: "Commercial",
-    description: "Complete electrical infrastructure setup for a major industrial facility including HT/LT panels, motor controls, and PLC automation systems.",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 2,
-    title: "Metro Mall Complex",
-    category: "Commercial",
-    description: "Full electrical installation for a multi-story shopping complex including escalators, decorative lighting, and fire safety systems.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 3,
-    title: "Logistics Hub Warehouse",
-    category: "Commercial",
-    description: "Warehouse electrical systems with high-bay lighting, material handling equipment wiring, and loading bay installations.",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 4,
-    title: "Premium Residence",
-    category: "Residential",
-    description: "High-end residential electrical work including smart home integration, concealed wiring, and designer lighting fixtures.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 5,
-    title: "Office Building Renovation",
-    category: "Renovation",
-    description: "Complete electrical overhaul of a 10-story office building with modern LED lighting and power backup systems.",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 6,
-    title: "Factory Power Distribution",
-    category: "Electrical",
-    description: "Industrial power distribution system with transformers, bus ducts, and motor control centers.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 7,
-    title: "HVAC Installation",
-    category: "Mechanical",
-    description: "Complete HVAC system installation for a corporate office including ducting, controls, and ventilation.",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 8,
-    title: "Retail Store Chain",
-    category: "Commercial",
-    description: "Electrical fit-out for multiple retail outlets with uniform branding lighting and POS systems.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
-  },
-  {
-    id: 9,
-    title: "Heritage Building Restoration",
-    category: "Renovation",
-    description: "Sensitive electrical restoration maintaining heritage aesthetics while meeting modern safety standards.",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  },
-];
-
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  description: string;
-  images: string[];
-}
-
-const AUTO_SLIDE_INTERVAL = 3000; // 3 seconds
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const openProject = (project: Project) => {
-    setSelectedProject(project);
-    setCurrentImageIndex(0);
-  };
+  // Embla setup
+  // Embla setup
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-  const nextImage = useCallback(() => {
-    if (selectedProject) {
-      setCurrentImageIndex((prev) => 
-        prev === selectedProject.images.length - 1 ? 0 : prev + 1
-      );
-    }
-  }, [selectedProject]);
-
-  const prevImage = useCallback(() => {
-    if (selectedProject) {
-      setCurrentImageIndex((prev) => 
-        prev === 0 ? selectedProject.images.length - 1 : prev - 1
-      );
-    }
-  }, [selectedProject]);
-
-  // Auto-slide effect
+  // Autoplay functionality with interaction handling
   useEffect(() => {
-    if (!selectedProject || selectedProject.images.length <= 1) return;
+    if (!emblaApi || !selectedProject) return;
 
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => 
-        prev === selectedProject.images.length - 1 ? 0 : prev + 1
-      );
-    }, AUTO_SLIDE_INTERVAL);
+    let intervalId: NodeJS.Timeout;
 
-    return () => clearInterval(interval);
-  }, [selectedProject, currentImageIndex]);
+    const play = () => {
+      stop(); // Clear existing timer to prevent dual-sliding
+      intervalId = setInterval(() => {
+        if (emblaApi.canScrollNext()) {
+          emblaApi.scrollNext();
+        } else {
+          emblaApi.scrollTo(0);
+        }
+      }, 3000);
+    };
+
+    const stop = () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+
+    // Start initial autoplay
+    play();
+
+    // Reset autoplay timer on any interaction (touch, drag, click)
+    // This ensures "continuous" sliding but waits for the user to finish
+    const onInteraction = () => {
+      stop();
+      play();
+    };
+
+    emblaApi.on("pointerDown", stop); // Pause while dragging
+    emblaApi.on("pointerUp", play);   // Resume after drag release
+    emblaApi.on("select", onInteraction); // Reset timer on slide change (manual or auto)
+
+    return () => {
+      stop();
+      emblaApi.off("pointerDown", stop);
+      emblaApi.off("pointerUp", play);
+      emblaApi.off("select", onInteraction);
+    };
+  }, [emblaApi, selectedProject]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!selectedProject || !emblaApi) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Allow keyboard navigation and reset the autoplay timer
+      if (e.key === "ArrowLeft") {
+        emblaApi.scrollPrev();
+        // Embla's 'select' event will trigger the timer reset
+      } else if (e.key === "ArrowRight") {
+        emblaApi.scrollNext();
+        // Embla's 'select' event will trigger the timer reset
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [emblaApi, selectedProject]);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   return (
     <Layout>
-      <div className="py-12">
-        <div className="container">
-          {/* Header */}
-          <div className="mb-10">
-            <h1 className="font-display text-4xl font-bold text-foreground">
-              Our Projects
-            </h1>
-            <p className="mt-4 text-muted-foreground max-w-2xl">
-              Explore our portfolio of successfully completed projects across various sectors.
-            </p>
-          </div>
-
-          {/* Main Layout */}
-          <div className="flex gap-8">
-            {/* Sidebar - Categories */}
-            <aside className="hidden lg:block w-56 shrink-0">
-              <div className="sticky top-24 space-y-1">
-                <h3 className="font-display font-semibold text-foreground mb-4 px-3">
+      <div className="min-h-screen bg-background">
+        <div className="container px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Sidebar - Categories (Static & Sticky) */}
+            <aside className="w-full md:w-64 lg:w-72 shrink-0 self-start md:sticky md:top-16 md:h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar py-8">
+              <div className="space-y-3 bg-card p-4 rounded-xl border border-border/50 shadow-sm">
+                <h3 className="font-display font-semibold text-lg text-foreground px-2 mb-4">
                   Categories
                 </h3>
-                {categories.map((category) => (
+
+                {categories.map((item) => (
                   <div
-                    key={category}
-                    className="px-3 py-2 text-sm text-muted-foreground rounded-md bg-muted/50"
+                    key={item.name}
+                    className="w-full flex items-center gap-4 px-4 py-4 rounded-lg text-left bg-transparent text-foreground cursor-default"
                   >
-                    {category}
+                    <div className="p-2 rounded-md bg-secondary/50 text-secondary-foreground transition-colors">
+                      <item.icon className="h-6 w-6" />
+                    </div>
+                    <span className="font-medium text-lg text-muted-foreground">{item.name}</span>
                   </div>
                 ))}
               </div>
             </aside>
 
             {/* Projects Grid */}
-            <div className="flex-1">
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="flex-1 py-12">
+              {/* Header moved inside */}
+              <div className="mb-12 text-center md:text-left">
+                <h1 className="font-display text-4xl font-bold text-foreground">
+                  Our Projects
+                </h1>
+                <p className="mt-4 text-muted-foreground max-w-2xl">
+                  Explore our portfolio of successfully completed projects across various sectors.
+                </p>
+              </div>
+
+              <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
                 {projects.map((project) => (
-                  <Card
+                  <ProjectCard
                     key={project.id}
-                    className="group cursor-pointer overflow-hidden border-border/50 hover:shadow-lg transition-all duration-300"
-                    onClick={() => openProject(project)}
-                  >
-                    <div className="aspect-video overflow-hidden bg-muted">
-                      <img
-                        src={project.images[0]}
-                        alt={project.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                        {project.category}
-                      </span>
-                      <h3 className="mt-1 font-display font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h3>
-                    </CardContent>
-                  </Card>
+                    project={project}
+                    onClick={setSelectedProject}
+                  />
                 ))}
               </div>
             </div>
@@ -192,73 +147,103 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Project Modal */}
+      {/* Project Modal with Carousel */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+        <DialogContent className="max-w-7xl w-[95vw] md:w-full max-h-[90vh] p-0 overflow-hidden bg-background border-none gap-0 block my-auto">
           <DialogTitle className="sr-only">
             {selectedProject?.title}
           </DialogTitle>
-          {selectedProject && (
-            <div>
-              {/* Image Carousel */}
-              <div className="relative aspect-video bg-muted">
-                <img
-                  src={selectedProject.images[currentImageIndex]}
-                  alt={`${selectedProject.title} - Image ${currentImageIndex + 1}`}
-                  className="h-full w-full object-cover"
-                />
-                
-                {selectedProject.images.length > 1 && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                      onClick={prevImage}
-                    >
-                      <ChevronLeft className="h-5 w-5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                      onClick={nextImage}
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </Button>
-                    
-                    {/* Dots */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                      {selectedProject.images.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentImageIndex(idx)}
-                          className={`w-2 h-2 rounded-full transition-colors ${
-                            idx === currentImageIndex 
-                              ? "bg-primary" 
-                              : "bg-background/60 hover:bg-background"
-                          }`}
-                        />
+
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 z-50 rounded-full bg-black/50 hover:bg-black/70 text-white"
+              onClick={() => setSelectedProject(null)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+
+            {selectedProject && (
+              <div className="flex flex-col md:flex-row h-[80vh] md:h-[600px] overflow-y-auto md:overflow-hidden">
+                {/* Image Carousel Section */}
+                <div className="w-full md:w-[55%] h-1/2 md:h-full relative bg-black shrink-0">
+                  <div className="overflow-hidden h-full" ref={emblaRef}>
+                    <div className="flex h-full">
+                      {selectedProject.images.map((image, idx) => (
+                        <div key={idx} className="flex-[0_0_100%] min-w-0 relative h-full">
+                          <img
+                            src={image}
+                            alt={`${selectedProject.title} ${idx + 1}`}
+                            className="block w-full h-full object-cover opacity-90"
+                          />
+                        </div>
                       ))}
                     </div>
-                  </>
-                )}
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full h-12 w-12"
+                    onClick={scrollPrev}
+                  >
+                    <ChevronLeft className="h-8 w-8" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full h-12 w-12"
+                    onClick={scrollNext}
+                  >
+                    <ChevronRight className="h-8 w-8" />
+                  </Button>
+                </div>
+
+                {/* Details Section */}
+                <div className="w-full md:w-[45%] p-6 md:p-8 flex flex-col bg-card overflow-y-auto">
+                  <div className="mb-4">
+                    <Badge className="mb-3" variant={selectedProject.status === "Completed" ? "default" : "secondary"}>
+                      {selectedProject.status}
+                    </Badge>
+                    <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+                      {selectedProject.title}
+                    </h2>
+
+                    <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-muted-foreground p-4 bg-muted/30 rounded-lg">
+                      {selectedProject.location && (
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-foreground">Location</span>
+                          <span>{selectedProject.location}</span>
+                        </div>
+                      )}
+                      {selectedProject.value && selectedProject.value !== "N/A" && (
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-foreground">Value</span>
+                          <span>{selectedProject.value}</span>
+                        </div>
+                      )}
+                      {selectedProject.area && selectedProject.area !== "N/A" && (
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-foreground">Area</span>
+                          <span>{selectedProject.area}</span>
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground">Category</span>
+                        <span>{selectedProject.category}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-muted-foreground leading-relaxed text-base">
+                      {selectedProject.description}
+                    </p>
+                  </div>
+                </div>
               </div>
-              
-              {/* Project Details */}
-              <div className="p-6">
-                <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                  {selectedProject.category}
-                </span>
-                <h2 className="mt-1 font-display text-2xl font-bold text-foreground">
-                  {selectedProject.title}
-                </h2>
-                <p className="mt-4 text-muted-foreground leading-relaxed">
-                  {selectedProject.description}
-                </p>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </Layout>
